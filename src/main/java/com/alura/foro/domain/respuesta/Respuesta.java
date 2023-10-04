@@ -1,7 +1,7 @@
 package com.alura.foro.domain.respuesta;
 
-import com.alura.foro.domain.usuario.Usuario;
 import com.alura.foro.domain.topico.Topico;
+import com.alura.foro.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
