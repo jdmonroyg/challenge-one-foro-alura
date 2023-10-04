@@ -1,4 +1,4 @@
-package com.alura.foroinicial;
+package com.alura.foro.foroinicial;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
