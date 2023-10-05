@@ -7,10 +7,7 @@ import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -36,5 +33,13 @@ public class UsuarioController {
                 .buildAndExpand(usuario.getId()).toUri();
         return ResponseEntity.created(url).body(datosRespuestaUsuario);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DatosRespuestaUsuario> retornarDatosUsuario(
+            @PathVariable Long id){ //tag importante para asignar el valor de id
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+        var datosUsuario= new DatosRespuestaUsuario(usuario);
+        return ResponseEntity.ok(datosUsuario);
     }
 }

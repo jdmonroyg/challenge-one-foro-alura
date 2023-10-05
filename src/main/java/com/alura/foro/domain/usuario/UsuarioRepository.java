@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @project challenge-one-foro-alura
  */
 public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
+    boolean existsByEmail(String emailBuscado);
 }
