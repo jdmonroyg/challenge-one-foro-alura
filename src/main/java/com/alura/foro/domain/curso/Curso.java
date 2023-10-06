@@ -20,4 +20,8 @@ public class Curso {
 	private Categoria categoria;
 
 
+	public Curso(DatosRegistroCurso datosRegistroCurso) {
+		this.nombre=datosRegistroCurso.nombre();
+		this.categoria=datosRegistroCurso.categoria();
+	}
 }

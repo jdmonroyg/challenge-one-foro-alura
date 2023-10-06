@@ -9,6 +9,6 @@ public enum Categoria {
     BACK_END,
     DATABASE,
     PROGRAMING,
-    OTRO
+    OTRA
 
 }
