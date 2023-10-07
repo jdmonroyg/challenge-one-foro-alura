@@ -10,7 +10,10 @@ public enum Nombre {
     JAVA_SPRING_BOOT,
     JAVASCRIPT,
     HTML5_CSS,
-    DATABASE,
+    REACT,
+    ANGULAR,
+    SQL,
+    MYSQL,
     OTRO
 
 }

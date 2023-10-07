@@ -1,0 +1,1 @@
+alter table topicos modify curso_id bigint not null;

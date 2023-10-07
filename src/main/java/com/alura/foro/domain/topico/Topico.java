@@ -1,10 +1,13 @@
 package com.alura.foro.domain.topico;
 
 import com.alura.foro.domain.curso.Curso;
+import com.alura.foro.domain.curso.CursoRepository;
 import com.alura.foro.domain.respuesta.Respuesta;
 import com.alura.foro.domain.usuario.Usuario;
+import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,9 +25,10 @@ public class Topico {
 	private Long id;
 	private String titulo;
 	private String mensaje;
-	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	// para evitar que hibernate haga su estrategia de nomenclatura y me agrege _
+	private LocalDateTime fechacreacion;
 	@Enumerated(EnumType.STRING)
-	private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+	private StatusTopico status;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
@@ -34,5 +38,16 @@ public class Topico {
 	@OneToMany
 	private List<Respuesta> respuestas = new ArrayList<>();
 
-
+	// la inyeccion de depencias de un repositorio no se debe hacer en una entidad,
+	//no es comun y genera problemas
+	public Topico(DatosRegistroTopico datosRegistroTopico,
+				  UsuarioRepository usuarioRepository,
+				  CursoRepository cursoRepository) {
+		this.titulo=datosRegistroTopico.titulo();
+		this.mensaje=datosRegistroTopico.mensaje();
+		this.usuario= usuarioRepository.getReferenceById(datosRegistroTopico.usuario_id());
+		this.curso= cursoRepository.getReferenceById(datosRegistroTopico.curso_id());
+		this.fechacreacion = LocalDateTime.now();
+		this.status=StatusTopico.NO_RESPONDIDO;
+	}
 }

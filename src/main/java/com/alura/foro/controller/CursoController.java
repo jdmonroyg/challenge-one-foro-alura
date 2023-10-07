@@ -1,12 +1,9 @@
 package com.alura.foro.controller;
 
 import com.alura.foro.domain.curso.Curso;
-import com.alura.foro.domain.curso.CursoRespository;
+import com.alura.foro.domain.curso.CursoRepository;
 import com.alura.foro.domain.curso.DatosRegistroCurso;
 import com.alura.foro.domain.curso.DatosRespuestaCurso;
-import com.alura.foro.domain.usuario.DatosRegistroUsuario;
-import com.alura.foro.domain.usuario.DatosRespuestaUsuario;
-import com.alura.foro.domain.usuario.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +20,13 @@ import java.net.URI;
 @RequestMapping("/cursos")
 public class CursoController {
     @Autowired
-    private CursoRespository cursoRespository;
+    private CursoRepository cursoRepository;
 
     @PostMapping
     public ResponseEntity<DatosRespuestaCurso> registrarCurso(@RequestBody @Valid
-                                                                  DatosRegistroCurso datosRegistroCurso,
-                                                                  UriComponentsBuilder uriComponentsBuilder){
-        Curso curso= cursoRespository.save(new Curso(datosRegistroCurso));
+                                        DatosRegistroCurso datosRegistroCurso,
+                                        UriComponentsBuilder uriComponentsBuilder){
+        Curso curso= cursoRepository.save(new Curso(datosRegistroCurso));
         DatosRespuestaCurso datosRespuestaUsuario= new DatosRespuestaCurso(curso);
         URI url = uriComponentsBuilder.path("/cursos/{id}")
                 .buildAndExpand(curso.getId()).toUri();
@@ -38,7 +35,7 @@ public class CursoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaCurso> retonarDatosCurso(@PathVariable Long id){
-        var curso=cursoRespository.getReferenceById(id);
+        var curso= cursoRepository.getReferenceById(id);
         var datosCurso= new DatosRespuestaCurso(curso);
         return ResponseEntity.ok(datosCurso);
 
