@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "respuesta")
+@Table(name = "respuestas")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class Respuesta {
 	@ManyToOne
 	@JoinColumn(name = "topico_id")
 	private Topico topico;
-	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	private LocalDateTime fechacreacion = LocalDateTime.now();
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;

@@ -1,18 +1,24 @@
 package com.alura.foro.controller;
 
 import com.alura.foro.domain.curso.CursoRepository;
-import com.alura.foro.domain.topico.DatosRegistroTopico;
-import com.alura.foro.domain.topico.DatosRespuestaTopico;
-import com.alura.foro.domain.topico.Topico;
-import com.alura.foro.domain.topico.TopicoRespository;
+import com.alura.foro.domain.curso.DatosRespuestaCurso;
+import com.alura.foro.domain.topico.*;
 import com.alura.foro.domain.usuario.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
 import java.net.URI;
+
 
 /**
  * @author jdmon on 4/10/2023.
@@ -27,9 +33,14 @@ public class TopicoController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private CursoRepository cursoRepository;
+
+    @Autowired
+    private TopicoService topicoService;
+
     @PostMapping
-    public ResponseEntity<DatosRespuestaTopico> registarTopico(@RequestBody @Valid DatosRegistroTopico datosRegistroTopico,
-                                                              UriComponentsBuilder uriComponentsBuilder ){
+    public ResponseEntity<DatosRespuestaTopico> registarTopico(
+            @RequestBody @Valid DatosRegistroTopico datosRegistroTopico,
+                                      UriComponentsBuilder uriComponentsBuilder ){
         Topico topico =topicoRespository.save(new Topico(datosRegistroTopico,
                 usuarioRepository,cursoRepository));
         DatosRespuestaTopico datosRespuestaTopico=new DatosRespuestaTopico(topico);
@@ -37,12 +48,44 @@ public class TopicoController {
                 .toUri();
         return ResponseEntity.created(url).body(datosRespuestaTopico);
     }
+    @GetMapping
+    public ResponseEntity<Page<DatosListadoTopico>> listarTopicos(
+            @PageableDefault(size=5, sort = "fechacreacion",
+            direction= Sort.Direction.DESC)  Pageable paginacion){
+        return ResponseEntity.ok(topicoRespository.findAll(paginacion)
+                .map(DatosListadoTopico::new));
+    }
 
     @GetMapping ("/{id}")
-    public ResponseEntity<DatosRespuestaTopico> retornarDatosTopico(@PathVariable Long id){
+    public ResponseEntity<DatosListadoTopico> retornarDatosTopico(
+            @PathVariable Long id){
         Topico topico= topicoRespository.getReferenceById(id);
-        DatosRespuestaTopico datosRespuestaTopico= new DatosRespuestaTopico(topico);
+        DatosListadoTopico datosRespuestaTopico= new DatosListadoTopico(topico);
         return ResponseEntity.ok(datosRespuestaTopico);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<DatosRespuestaTopico> actualizarDatosTopico(
+            @PathVariable @NotNull Long id,
+            @RequestBody @Valid DatosActualizarTopico datosActualizarTopico){
+        Topico topico=getTopico(id);
+        topico.actualizarTopico(datosActualizarTopico);
+        return ResponseEntity.ok(new DatosRespuestaTopico(topico));
+
+    }
+    // implemente un sotf delete
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> eliminarTopico(@PathVariable Long id){
+        topicoService.existeTopico(id);
+        Topico topico=getTopico(id);
+        topicoRespository.delete(topico);
+        return ResponseEntity.noContent().build();
+    }
+
+    private Topico getTopico(Long id) {
+        return topicoRespository.getReferenceById(id);
     }
 
 }

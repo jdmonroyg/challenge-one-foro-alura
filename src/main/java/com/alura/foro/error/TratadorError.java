@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 /**
  * @author jdmon on 4/10/2023.
@@ -32,7 +33,7 @@ public class TratadorError {
         );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleMethodArgumentValidationErrors(
+    public ResponseEntity<List<DatosErrorValidation>> handleMethodArgumentValidationErrors(
             MethodArgumentNotValidException exception){
         var errores=exception.getFieldErrors().stream().map(DatosErrorValidation::new).toList();
         return ResponseEntity.badRequest().body(errores);
@@ -43,5 +44,10 @@ public class TratadorError {
             this(error.getField(),error.getDefaultMessage());
         }
 
+    }
+
+    @ExceptionHandler(ValidacionDeIntegridad.class)
+    public ResponseEntity<String> handleValidacionDeIntegridad(Exception exception){
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

@@ -14,7 +14,7 @@ public record DatosRespuestaTopico(Long id, String titulo, String mensaje,
                                    Long usuario_id, Long curso_id){
     public DatosRespuestaTopico(Topico topico) {
         this(topico.getId(), topico.getTitulo(), topico.getMensaje(),
-                topico.getFechacreacion(), topico.getStatus(),topico.getUsuario().getId(),
-                topico.getCurso().getId());
+                topico.getFechacreacion(), topico.getStatus(),
+                topico.getUsuario().getId(),topico.getCurso().getId());
     }
 }

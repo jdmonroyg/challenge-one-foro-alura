@@ -35,7 +35,8 @@ public class Topico {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "curso_id")
 	private Curso curso;
-	@OneToMany
+	@OneToMany(mappedBy = "topico", cascade = CascadeType.ALL,
+			orphanRemoval = true)
 	private List<Respuesta> respuestas = new ArrayList<>();
 
 	// la inyeccion de depencias de un repositorio no se debe hacer en una entidad,
@@ -49,5 +50,17 @@ public class Topico {
 		this.curso= cursoRepository.getReferenceById(datosRegistroTopico.curso_id());
 		this.fechacreacion = LocalDateTime.now();
 		this.status=StatusTopico.NO_RESPONDIDO;
+	}
+
+	public void actualizarTopico(DatosActualizarTopico datosActualizarTopico) {
+		if(datosActualizarTopico.titulo()!=null){
+			this.titulo= datosActualizarTopico.titulo();
+		}
+		if(datosActualizarTopico.mensaje()!=null){
+			this.mensaje= datosActualizarTopico.mensaje();
+		}
+		if(datosActualizarTopico.status()!=null){
+			this.status= datosActualizarTopico.status();
+		}
 	}
 }
