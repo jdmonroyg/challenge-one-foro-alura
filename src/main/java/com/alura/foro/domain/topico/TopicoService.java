@@ -1,6 +1,6 @@
 package com.alura.foro.domain.topico;
 
-import com.alura.foro.error.ValidacionDeIntegridad;
+import com.alura.foro.infra.error.ValidacionDeIntegridad;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

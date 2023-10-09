@@ -1,4 +1,4 @@
-package com.alura.foro.error;
+package com.alura.foro.infra.error;
 
 /**
  * @author jdmon on 5/10/2023.

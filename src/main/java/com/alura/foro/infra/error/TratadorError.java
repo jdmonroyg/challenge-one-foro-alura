@@ -1,4 +1,4 @@
-package com.alura.foro.error;
+package com.alura.foro.infra.error;
 
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,9 +33,11 @@ public class TratadorError {
         );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<DatosErrorValidation>> handleMethodArgumentValidationErrors(
+    public ResponseEntity<List<DatosErrorValidation>>
+    handleMethodArgumentValidationErrors(
             MethodArgumentNotValidException exception){
-        var errores=exception.getFieldErrors().stream().map(DatosErrorValidation::new).toList();
+        var errores=exception.getFieldErrors().stream()
+                .map(DatosErrorValidation::new).toList();
         return ResponseEntity.badRequest().body(errores);
 
     }
@@ -47,7 +49,9 @@ public class TratadorError {
     }
 
     @ExceptionHandler(ValidacionDeIntegridad.class)
-    public ResponseEntity<String> handleValidacionDeIntegridad(Exception exception){
-        return ResponseEntity.badRequest().body(exception.getMessage());
+    public ResponseEntity<String> handleValidacionDeIntegridad(
+            Exception exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
     }
 }

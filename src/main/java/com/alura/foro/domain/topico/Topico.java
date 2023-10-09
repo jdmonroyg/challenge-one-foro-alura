@@ -7,7 +7,6 @@ import com.alura.foro.domain.usuario.Usuario;
 import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ public class Topico {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "curso_id")
 	private Curso curso;
+	private Boolean activo;
 	@OneToMany(mappedBy = "topico", cascade = CascadeType.ALL,
 			orphanRemoval = true)
 	private List<Respuesta> respuestas = new ArrayList<>();
@@ -48,8 +48,9 @@ public class Topico {
 		this.mensaje=datosRegistroTopico.mensaje();
 		this.usuario= usuarioRepository.getReferenceById(datosRegistroTopico.usuario_id());
 		this.curso= cursoRepository.getReferenceById(datosRegistroTopico.curso_id());
-		this.fechacreacion = LocalDateTime.now();
+		this.fechacreacion =LocalDateTime.now();
 		this.status=StatusTopico.NO_RESPONDIDO;
+		this.activo=true;
 	}
 
 	public void actualizarTopico(DatosActualizarTopico datosActualizarTopico) {
@@ -62,5 +63,9 @@ public class Topico {
 		if(datosActualizarTopico.status()!=null){
 			this.status= datosActualizarTopico.status();
 		}
+	}
+
+	public void desactivarTopico() {
+		this.activo=false;
 	}
 }

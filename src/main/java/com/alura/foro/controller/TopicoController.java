@@ -1,7 +1,6 @@
 package com.alura.foro.controller;
 
 import com.alura.foro.domain.curso.CursoRepository;
-import com.alura.foro.domain.curso.DatosRespuestaCurso;
 import com.alura.foro.domain.topico.*;
 import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -44,7 +43,7 @@ public class TopicoController {
         Topico topico =topicoRespository.save(new Topico(datosRegistroTopico,
                 usuarioRepository,cursoRepository));
         DatosRespuestaTopico datosRespuestaTopico=new DatosRespuestaTopico(topico);
-        URI url = uriComponentsBuilder.path("{/id}").buildAndExpand(topico.getId())
+        URI url = uriComponentsBuilder.path("/{id}").buildAndExpand(topico.getId())
                 .toUri();
         return ResponseEntity.created(url).body(datosRespuestaTopico);
     }
@@ -52,7 +51,7 @@ public class TopicoController {
     public ResponseEntity<Page<DatosListadoTopico>> listarTopicos(
             @PageableDefault(size=5, sort = "fechacreacion",
             direction= Sort.Direction.DESC)  Pageable paginacion){
-        return ResponseEntity.ok(topicoRespository.findAll(paginacion)
+        return ResponseEntity.ok(topicoRespository.findByActivoTrue(paginacion)
                 .map(DatosListadoTopico::new));
     }
 
@@ -80,7 +79,7 @@ public class TopicoController {
     public ResponseEntity<Void> eliminarTopico(@PathVariable Long id){
         topicoService.existeTopico(id);
         Topico topico=getTopico(id);
-        topicoRespository.delete(topico);
+        topico.desactivarTopico();
         return ResponseEntity.noContent().build();
     }
 
