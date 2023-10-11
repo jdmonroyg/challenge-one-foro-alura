@@ -44,11 +44,14 @@ public class Respuesta {
 				datosRegistroRespuesta.topico_id()
 		);
 		//agregar una respuesta cambia de estado
-		this.topico.setStatus(StatusTopico.NO_SOLUCIONADO);
+		if(this.topico.getStatus().equals(StatusTopico.NO_RESPONDIDO)){
+			this.topico.setStatus(StatusTopico.NO_SOLUCIONADO);
+		}
 		this.fechacreacion = LocalDateTime.now();
 		this.solucion=false;
 		this.activo=true;
-
+		//agregando las respuestas a la lita de respuestas en topico
+		this.topico.getRespuestas().add(this);
 	}
 	public void desactivarRespuesta() {
 		this.activo=false;

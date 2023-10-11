@@ -37,7 +37,7 @@ public class Topico {
 	private Boolean activo;
 	@OneToMany(mappedBy = "topico", cascade = CascadeType.ALL,
 			orphanRemoval = true)
-	private List<Respuesta> respuestas = new ArrayList<>();
+	private List<Respuesta> respuestas;
 
 	// la inyeccion de depencias de un repositorio no se debe hacer en una entidad,
 	//no es comun y genera problemas
@@ -51,6 +51,7 @@ public class Topico {
 		this.fechacreacion =LocalDateTime.now();
 		this.status=StatusTopico.NO_RESPONDIDO;
 		this.activo=true;
+		this.respuestas=new ArrayList<>();
 	}
 
 	public void actualizarTopico(DatosActualizarTopico datosActualizarTopico) {

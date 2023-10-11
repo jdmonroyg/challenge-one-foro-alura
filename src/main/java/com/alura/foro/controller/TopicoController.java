@@ -1,6 +1,7 @@
 package com.alura.foro.controller;
 
 import com.alura.foro.domain.curso.CursoRepository;
+import com.alura.foro.domain.respuesta.DatosListadoRespuesta;
 import com.alura.foro.domain.topico.*;
 import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.net.URI;
+import java.util.List;
 
 
 /**
@@ -56,11 +58,14 @@ public class TopicoController {
     }
 
     @GetMapping ("/{id}")
-    public ResponseEntity<DatosListadoTopico> retornarDatosTopico(
+    public ResponseEntity<DatosListadoTopicoConRespuestas> retornarDatosTopico(
             @PathVariable Long id){
         Topico topico= topicoRespository.getReferenceById(id);
-        DatosListadoTopico datosRespuestaTopico= new DatosListadoTopico(topico);
-        return ResponseEntity.ok(datosRespuestaTopico);
+        List<DatosListadoRespuesta> respuestas = topico.getRespuestas()
+                .stream().map(DatosListadoRespuesta::new).toList();
+        DatosListadoTopicoConRespuestas datosListadoTopicoConRespuestas=
+                new DatosListadoTopicoConRespuestas(topico,respuestas);
+        return ResponseEntity.ok(datosListadoTopicoConRespuestas);
     }
 
     @PutMapping("/{id}")
