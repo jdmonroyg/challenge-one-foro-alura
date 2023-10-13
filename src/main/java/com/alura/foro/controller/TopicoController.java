@@ -2,6 +2,7 @@ package com.alura.foro.controller;
 
 import com.alura.foro.domain.curso.CursoRepository;
 import com.alura.foro.domain.respuesta.DatosListadoRespuesta;
+import com.alura.foro.domain.respuesta.Respuesta;
 import com.alura.foro.domain.topico.*;
 import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -60,9 +61,12 @@ public class TopicoController {
     @GetMapping ("/{id}")
     public ResponseEntity<DatosListadoTopicoConRespuestas> retornarDatosTopico(
             @PathVariable Long id){
-        Topico topico= topicoRespository.getReferenceById(id);
+        Topico topico= getTopico(id);
         List<DatosListadoRespuesta> respuestas = topico.getRespuestas()
-                .stream().map(DatosListadoRespuesta::new).toList();
+                .stream().filter(respuesta ->
+                        respuesta.getActivo() == Boolean.TRUE)
+                .map(DatosListadoRespuesta::new)
+                .toList();
         DatosListadoTopicoConRespuestas datosListadoTopicoConRespuestas=
                 new DatosListadoTopicoConRespuestas(topico,respuestas);
         return ResponseEntity.ok(datosListadoTopicoConRespuestas);
@@ -72,7 +76,7 @@ public class TopicoController {
     @Transactional
     public ResponseEntity<DatosRespuestaTopico> actualizarDatosTopico(
             @PathVariable @NotNull Long id,
-            @RequestBody @Valid DatosActualizarTopico datosActualizarTopico){
+            @RequestBody DatosActualizarTopico datosActualizarTopico){
         Topico topico=getTopico(id);
         topico.actualizarTopico(datosActualizarTopico);
         return ResponseEntity.ok(new DatosRespuestaTopico(topico));
@@ -82,11 +86,20 @@ public class TopicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> eliminarTopico(@PathVariable Long id){
-        topicoService.existeTopico(id);
         Topico topico=getTopico(id);
         topico.desactivarTopico();
+        topico.getRespuestas().forEach(Respuesta::desactivarRespuesta);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/cerrar")
+    @Transactional
+    public ResponseEntity<Void> cerrarTopico(@PathVariable Long id){
+        Topico topico = getTopico(id);
+        topicoService.cerrarTopico(topico);
+        return ResponseEntity.noContent().build();
+    }
+
 
     private Topico getTopico(Long id) {
         return topicoRespository.getReferenceById(id);

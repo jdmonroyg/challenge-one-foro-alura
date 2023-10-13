@@ -51,7 +51,7 @@ public class TratadorError {
     @ExceptionHandler(ValidacionDeIntegridad.class)
     public ResponseEntity<String> handleValidacionDeIntegridad(
             Exception exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(exception.getMessage());
     }
 }

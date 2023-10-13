@@ -35,14 +35,13 @@ public class Respuesta {
 
 	public Respuesta(DatosRegistroRespuesta datosRegistroRespuesta,
 					 UsuarioRepository usuarioRepository,
-					 TopicoRespository topicoRespository) {
+					 Topico topico) {
+
 		this.mensaje= datosRegistroRespuesta.mensaje();
 		this.usuario=usuarioRepository.getReferenceById(
 				datosRegistroRespuesta.usuario_id()
 		);
-		this.topico=topicoRespository.getReferenceById(
-				datosRegistroRespuesta.topico_id()
-		);
+		this.topico=topico;
 		//agregar una respuesta cambia de estado
 		if(this.topico.getStatus().equals(StatusTopico.NO_RESPONDIDO)){
 			this.topico.setStatus(StatusTopico.NO_SOLUCIONADO);
@@ -55,5 +54,17 @@ public class Respuesta {
 	}
 	public void desactivarRespuesta() {
 		this.activo=false;
+	}
+
+	public void actualizarRespuesta(DatosActualizarRespuesta datosActualizarRespuesta) {
+		if (datosActualizarRespuesta.mensaje()!=null){
+			this.mensaje= datosActualizarRespuesta.mensaje();
+		}
+		if (datosActualizarRespuesta.solucion()!=null){
+			this.solucion=datosActualizarRespuesta.solucion();
+			if (this.solucion){
+				this.topico.setStatus(StatusTopico.SOLUCIONADO);
+			}
+		}
 	}
 }

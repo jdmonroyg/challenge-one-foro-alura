@@ -1,10 +1,6 @@
 package com.alura.foro.domain.topico;
 
-import com.alura.foro.domain.respuesta.DatosListadoRespuesta;
-import com.alura.foro.domain.respuesta.Respuesta;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author jdmon on 7/10/2023.

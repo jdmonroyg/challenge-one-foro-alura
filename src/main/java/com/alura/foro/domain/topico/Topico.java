@@ -35,8 +35,7 @@ public class Topico {
 	@JoinColumn(name = "curso_id")
 	private Curso curso;
 	private Boolean activo;
-	@OneToMany(mappedBy = "topico", cascade = CascadeType.ALL,
-			orphanRemoval = true)
+	@OneToMany(mappedBy = "topico")
 	private List<Respuesta> respuestas;
 
 	// la inyeccion de depencias de un repositorio no se debe hacer en una entidad,
