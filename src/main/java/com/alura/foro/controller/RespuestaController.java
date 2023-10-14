@@ -3,6 +3,7 @@ package com.alura.foro.controller;
 import com.alura.foro.domain.respuesta.*;
 import com.alura.foro.domain.topico.Topico;
 import com.alura.foro.domain.topico.TopicoRespository;
+import com.alura.foro.domain.usuario.Usuario;
 import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -27,10 +28,7 @@ import java.net.URI;
 public class RespuestaController {
     @Autowired
     private RespuestaRepository respuestaRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private TopicoRespository topicoRespository;
+
 
     @Autowired
     private RespuestaService respuestaService;
@@ -38,11 +36,7 @@ public class RespuestaController {
     public ResponseEntity<DatosRespuestaRespuesta> registrarRespuesta(
             @RequestBody @Valid DatosRegistroRespuesta datosRegistroRespuesta,
             UriComponentsBuilder uriComponentsBuilder){
-        Topico topico =topicoRespository.getReferenceById(datosRegistroRespuesta.topico_id());
-        respuestaService.validarEstadoTopico(topico);
-        Respuesta respuesta= respuestaRepository.save(
-                new Respuesta(datosRegistroRespuesta,usuarioRepository,
-                        topico));
+        var respuesta=respuestaService.registrarRespuesta(datosRegistroRespuesta);
         DatosRespuestaRespuesta datosRespuestaRespuesta =
                 new DatosRespuestaRespuesta(respuesta);
         URI url = uriComponentsBuilder.path("respuestas/{id}")

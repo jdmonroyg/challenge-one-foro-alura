@@ -2,9 +2,7 @@ package com.alura.foro.domain.respuesta;
 
 import com.alura.foro.domain.topico.StatusTopico;
 import com.alura.foro.domain.topico.Topico;
-import com.alura.foro.domain.topico.TopicoRespository;
 import com.alura.foro.domain.usuario.Usuario;
-import com.alura.foro.domain.usuario.UsuarioRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,13 +32,11 @@ public class Respuesta {
 
 
 	public Respuesta(DatosRegistroRespuesta datosRegistroRespuesta,
-					 UsuarioRepository usuarioRepository,
+					 Usuario usuario,
 					 Topico topico) {
 
 		this.mensaje= datosRegistroRespuesta.mensaje();
-		this.usuario=usuarioRepository.getReferenceById(
-				datosRegistroRespuesta.usuario_id()
-		);
+		this.usuario=usuario;
 		this.topico=topico;
 		//agregar una respuesta cambia de estado
 		if(this.topico.getStatus().equals(StatusTopico.NO_RESPONDIDO)){
