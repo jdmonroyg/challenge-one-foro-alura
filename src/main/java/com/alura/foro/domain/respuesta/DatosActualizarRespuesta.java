@@ -1,6 +1,6 @@
 package com.alura.foro.domain.respuesta;
 
-import com.alura.foro.domain.topico.StatusTopico;
+
 
 /**
  * @author jdmon on 12/10/2023.
